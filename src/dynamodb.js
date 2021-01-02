@@ -1,4 +1,4 @@
-const AWS = require('aws-sdk');
+import AWS from 'aws-sdk';
 
 let options = {};
 
@@ -11,4 +11,4 @@ if (process.env.IS_OFFLINE) {
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient(options);
 
-module.exports = dynamoDB;
+export { dynamoDB };

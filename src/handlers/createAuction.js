@@ -1,8 +1,10 @@
 import { v4 as uuid } from 'uuid';
-import dynamoDB from '../dynamodb';
+import { dynamoDB } from '../dynamodb';
+import { commonMiddleware } from '../lib/commonMiddleware';
+import createHttpError from 'http-errors';
 
 async function createAuction(event, context) {
-  const { title } = JSON.parse(event.body);
+  const { title } = event.body;
   const now = new Date();
 
   const auction = {
@@ -10,25 +12,29 @@ async function createAuction(event, context) {
     title,
     status: 'OPEN',
     createdAt: now.toISOString(),
+    highestBid: {
+      amount: 0,
+    },
+  };
+
+  const params = {
+    TableName: process.env.AUCTIONS_TABLE,
+    Item: auction,
   };
 
   try {
-    await dynamoDB.put({
-      TableName: process.env.AUCTIONS_TABLE,
-      Item: auction,
-    }).promise();
+    await dynamoDB.put(params).promise();
   } catch(e) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({message: e}),
-    };
+    console.error(e);
+    throw new createHttpError.InternalServerError(e);
   }
+
   return {
     statusCode: 201,
     body: JSON.stringify(auction),
   };
 }
 
-export const handler = createAuction;
+export const handler = commonMiddleware(createAuction);
 
 
