@@ -1,6 +1,6 @@
 # Serverless Auction Service
 
-This project is based on the nodejs aws template.
+This project is based on the nodejs aws template. There's a lot of extra notes as this is a test app to learn Serverless.
 
 ## Setup
     $ npm i -g serverless serverless-offline
@@ -11,6 +11,9 @@ This project is based on the nodejs aws template.
     $ npm run dev # localhost:3000 
     $ sls deploy -v # shows the output of CloudFormation
     $ sls deploy -f <Function Name> -v
+    $ sls deploy -f <Function Name> -l # shows the logs of the function (this function is listed as a schedule, not a regular function!)
+    $ sls logs -f <Function Name> # `-t` tail log the function, `-startTime 1m` logs from 1m ago
+    $ sls invoke -f <Function Name> # locally invoke the function, `-l` to get the logs that come with the function
 
 You can invoke locally as well, but sls-offline is really like having everything on aws, without the costs. Use Postman here once you have the env running.
 
