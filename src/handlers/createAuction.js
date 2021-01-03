@@ -2,6 +2,8 @@ import { v4 as uuid } from 'uuid';
 import { dynamoDB } from '../dynamodb';
 import { commonMiddleware } from '../lib/commonMiddleware';
 import createHttpError from 'http-errors';
+import validator from '@middy/validator';
+import { schema } from '../lib/schemas/createAuction';
 
 async function createAuction(event, context) {
   const { title } = event.body;
@@ -38,6 +40,9 @@ async function createAuction(event, context) {
   };
 }
 
-export const handler = commonMiddleware(createAuction);
+export const handler = commonMiddleware(createAuction)
+  .use(validator({
+    inputSchema: schema,
+  }));
 
 

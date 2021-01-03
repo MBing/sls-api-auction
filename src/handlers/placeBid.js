@@ -2,6 +2,8 @@ import { dynamoDB } from '../dynamodb';
 import createHttpError from 'http-errors';
 import { commonMiddleware } from '../lib/commonMiddleware';
 import { getAuctionById } from './getAuction';
+import validator from '@middy/validator';
+import { schema } from '../lib/schemas/getAuctionsSchema';
 
 async function placeBid (event, context) {
     let updatedAuction;
@@ -50,4 +52,7 @@ async function placeBid (event, context) {
     };
 };
 
-export const handler = commonMiddleware(placeBid);
+export const handler = commonMiddleware(placeBid)
+    .use(validator({
+        inputSchema: schema,
+    }));
